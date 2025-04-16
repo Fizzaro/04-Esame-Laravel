@@ -51,10 +51,10 @@ class AccediController extends Controller
                 Password::create($pssw);
                 return ['idUtente'=>$idUtente, 'username'=>$username, 'pssw'=>$password];
             } else {
-                abort(400, 'Username già in uso');
+                return AppHelpers::rispostaCustom(null, 'Username già in uso', 400);
             }
         }else {
-            abort(400, 'Utente già registrato');
+            return AppHelpers::rispostaCustom(null, 'Utente già registrato', 400);
         }
     }
 
@@ -124,16 +124,16 @@ class AccediController extends Controller
                     if ($payload != null) {
                         return $payload;
                     } else {
-                        abort(400, 'Payload non trovato');
+                        return AppHelpers::rispostaCustom(null, 'Payload non trovato', 404);
                     }
                 } else {
-                    abort(403, 'Utente non trovato');
+                    return AppHelpers::rispostaCustom(null, 'Utente non trovato', 403);
                 }
             } else {
-                abort(400, 'Token scaduto, accedi con credenziali');
+                return AppHelpers::rispostaCustom(null, 'Token scaduto, accedi con credenziali', 400);
             }
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 
@@ -246,16 +246,16 @@ class AccediController extends Controller
                         return AppHelpers::rispostaCustom(['token' => $token]);
                     } else {
                         Accesso::tentativoFallito($idUtente);
-                        abort(403, 'Tentativo fallito');
+                        return AppHelpers::rispostaCustom(null, 'Tentativo fallito', 403);
                     }
                 } else {
-                    abort(403, 'Troppi tentativi');
+                    return AppHelpers::rispostaCustom(null, 'Troppi tentativi', 403);
                 }
             } else {
-                abort(400, 'Sessione scaduta');
+                return AppHelpers::rispostaCustom(null, 'Sessione scaduta', 400);
             }
         } else {
-            abort(404, 'Utente non esiste');
+            return AppHelpers::rispostaCustom(null, 'Utente non esiste', 404);
         }
     }
 

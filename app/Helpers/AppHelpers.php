@@ -44,9 +44,9 @@ class AppHelpers {
             $scadenza = ($scade==null) ? 60*60*24*15 : $scade; //15 giorni
             $utente = Utente::where('idUtente', $idUtente)->first();
             $idPermesso = $utente->idPermesso;
+            $permesso = Permesso::where('idPermesso', $idPermesso)->first()->permesso;
             $idStato = $utente->idStato;
             $stato = Stato::where('idStato', $idStato)->first()->stato;
-            $permesso = Permesso::where('idPermesso', $idPermesso)->first()->permesso;
             $idAzioni = DB::table('permessi_azioni')->where('idPermesso', $idPermesso)->pluck('idAzione')->toArray();
             $azioni = array_map(function ($arr) {
                 $az = DB::table('azioni')->where('idAzione', $arr)->first();
@@ -85,11 +85,9 @@ class AppHelpers {
     /**
      * Uniforma la risposta
      *
-     * @param boolean $successo TRUE se la richiesta è andata a buon fine
-     * @param integer $codice STATUS CODe della richiesta
      * @param array $dati Dati richiesti
-     * @param string $messaggio
-     * @param array $errori
+     * @param string $msg
+     * @param array $err
      * @return array
      */
     public static function rispostaCustom($dati, $msg = null, $err = null)

@@ -24,7 +24,7 @@ class FilmFactory extends Factory
             "regista" => $this->faker->sentence(2),
             "produttore" => $this->faker->sentence(2),
             "attori" => $this->faker->sentence(10),
-            "annoUscita" => $this->faker->sentence(1),
+            "annoUscita" => $this->faker->date('Y-m-d'),
             "idLocandina" => $this->faker->numerify(),
             "idTrailer" => $this->faker->numerify(),
             "idVideo" => $this->faker->numerify()

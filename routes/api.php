@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegistraController;
 use App\Http\Controllers\AccediController;
 use App\Http\Controllers\UtenteController;
 use App\Http\Controllers\CategoriaController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\RecapitoController;
 use App\Http\Controllers\TipologiaIndirizzoController;
 use App\Http\Controllers\TipologiaRecapitoController;
 use App\Helpers\AppHelpers;
+use App\Http\Controllers\ComuneController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,12 +40,15 @@ Route::get('/testLogin', function () {
 
 // API OSPITE
 
-//crea nuovo utente
-Route::post("/utenti",[UtenteController::class, 'store']);
-//crea username e password nuovo utente
-Route::post("/crea/{utente}/{username}/{password}",[AccediController::class, 'store']);
+//crea nuovo utente, indirizzo mail, username e password
+Route::post("/registra",[RegistraController::class, 'store']);
 //accesso utente con username e password
 Route::get("/accedi/{username}/{password?}",[AccediController::class, 'show']);
+
+//mostra tutti i comuni
+Route::get("/comuni",[ComuneController::class, 'index']);
+//mostra un comune
+Route::get("/comuni/{idComune}",[ComuneController::class, 'show']);
 
 // API CON AUTENTICAZIONE MEMBRO E AMMINISTRATORE
 Route::middleware(['autenticazione', 'statoUtente:attivo', 'permessoUtente:Amministratore,Membro'])->group(function () {

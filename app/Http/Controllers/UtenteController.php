@@ -10,6 +10,7 @@ use App\Http\Resources\UtenteCollection;
 use App\Http\Resources\UtenteResourceComplete;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Helpers\AppHelpers;
 
 class UtenteController extends Controller
 {
@@ -51,7 +52,7 @@ class UtenteController extends Controller
                 //return risorsa
                     return new UtenteResource($utente);
             } else {
-                abort(400, 'Utente già registrato');
+                return AppHelpers::rispostaCustom(null, 'Utente già registrato', 400);
             }
     }
 
@@ -68,7 +69,7 @@ class UtenteController extends Controller
         } elseif (Gate::allows("Membro") && Auth::user()->idUtente == $utente->idUtente) {
             return new UtenteResource($utente);
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 
@@ -96,7 +97,7 @@ class UtenteController extends Controller
             $utente->save();
             return new UtenteResource($utente);
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
 
     }

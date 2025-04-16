@@ -44,7 +44,7 @@ class CategoriaController extends Controller
             //return risorsa modificata
                 return new CategoriaResource($categoria);
         } else {
-            abort(400, 'Categoria già presente');
+            return AppHelpers::rispostaCustom(null, 'Categoria già presente', 400);
         }
     }
 

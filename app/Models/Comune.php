@@ -14,10 +14,10 @@ class Comune extends Model
 
     protected $fillable=[
         "idNazione",
-        "nome",
+        "comune",
         "regione",
         "citta",
         "provincia",
-        "CAP"
+        "cap"
     ];
 }

@@ -7,7 +7,7 @@ use App\Http\Resources\RecapitoResource;
 use App\Http\Resources\RecapitoCollection;
 use App\Http\Requests\RecapitoUpdateRequest;
 use App\Http\Requests\RecapitoStoreRequest;
-use Illuminate\Http\Request;
+use App\Helpers\AppHelpers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,9 +41,9 @@ class RecapitoController extends Controller
         //verificare i dati
         $dati = $request->validated();
         //preparare il model
-            $film = Recapito::create($dati);
+            $recapito = Recapito::create($dati);
         //return risorsa modificata
-            return new RecapitoResource($film);
+            return new RecapitoResource($recapito);
     }
 
     /**
@@ -58,7 +58,7 @@ class RecapitoController extends Controller
         if ((Gate::allows("Amministratore")) || (Gate::allows("Membro") && Auth::user()->idUtente == $recapito->idUtente)) {
             return $recapito;
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 
@@ -86,7 +86,7 @@ class RecapitoController extends Controller
             $idRecapito->save();
             return new RecapitoResource($idRecapito);
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 

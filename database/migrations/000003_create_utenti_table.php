@@ -22,7 +22,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('sesso'); //0 maschio, 1 femmina
             $table->date('dataNascita');
             $table->string('comuneNascita');
-            $table->string('provinciaNascita');
             $table->string('codFiscale');
 
             $table->softDeletes();

@@ -23,7 +23,6 @@ class UtenteResourceComplete extends JsonResource
             "sesso" => $this->sesso,
             "dataNascita" => $this->dataNascita,
             "comuneNascita" => $this->comuneNascita,
-            "provinciaNascita" => $this->provinciaNascita,
             "codFiscale" => $this->codFiscale,
         ];
     }

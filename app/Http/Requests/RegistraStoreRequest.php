@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UtenteStoreRequest extends FormRequest
+class RegistraStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,10 @@ class UtenteStoreRequest extends FormRequest
             'sesso' => 'required|integer',
             'dataNascita' => 'required|date',
             'comuneNascita' => 'required|string',
-            'codFiscale' => 'required|string'
+            'codFiscale' => 'required|string',
+            'recapito' => 'required|string|max:255',
+            'username' => 'required|string|max:45',
+            'password' => 'required|string|min:8|max:45'
         ];
     }
 }

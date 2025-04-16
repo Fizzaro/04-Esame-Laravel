@@ -7,7 +7,7 @@ use App\Http\Requests\IndirizzoUpdateRequest;
 use App\Models\Indirizzo;
 use App\Http\Resources\IndirizzoResource;
 use App\Http\Resources\IndirizzoCollection;
-use Illuminate\Http\Request;
+use App\Helpers\AppHelpers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,7 +60,7 @@ class IndirizzoController extends Controller
         if ((Gate::allows("Amministratore")) || (Gate::allows("Membro") && Auth::user()->idUtente == $indirizzo->idUtente)) {
             return $indirizzo;
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 
@@ -88,7 +88,7 @@ class IndirizzoController extends Controller
             $idIndirizzo->save();
             return new IndirizzoResource($idIndirizzo);
         } else {
-            abort(403, 'Utente non abilitato');
+            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
         }
     }
 

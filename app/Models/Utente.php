@@ -22,7 +22,6 @@ class Utente extends User
         "sesso",
         "dataNascita",
         "comuneNascita",
-        "provinciaNascita",
         "codFiscale",
         "created_at",
         "update_at"
