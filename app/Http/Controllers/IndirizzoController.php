@@ -87,9 +87,8 @@ class IndirizzoController extends Controller
             $idIndirizzo->fill($dati);
             $idIndirizzo->save();
             return new IndirizzoResource($idIndirizzo);
-        } else {
-            return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
-        }
+        } else return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
+        
     }
 
     /**
@@ -100,7 +99,9 @@ class IndirizzoController extends Controller
      */
     public function destroy(Indirizzo $idIndirizzo)
     {
-        $idIndirizzo->deleteOrFail();
-        return response()->noContent();
+        if ( Gate::allows("Amministratore") || (Gate::allows("Membro") && Auth::user()->idUtente == $idIndirizzo->idUtente)) {
+            $idIndirizzo->deleteOrFail();
+            return response()->noContent();
+        } else return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);
     }
 }

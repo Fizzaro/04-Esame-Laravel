@@ -37,7 +37,7 @@ class AccediController extends Controller
         //verifica l'esistenza dell'utente
         $utente = Utente::where('idUtente', $idUtente)->first();
         if ($utente == null) {
-            abort(404, 'Utente inesistente');
+            return AppHelpers::rispostaCustom(null, 'Utente non trovato', 403);
         //verifica se l'utente è già registrato
         } else if ((Autorizzazione::where('idUtente', $idUtente)->first()) == null){
             $username = hash('sha512', $username);
@@ -49,7 +49,7 @@ class AccediController extends Controller
                 Autorizzazione::create($user);
                 $pssw = ['idUtente'=>$idUtente, 'pssw'=>$password];
                 Password::create($pssw);
-                return ['idUtente'=>$idUtente, 'username'=>$username, 'pssw'=>$password];
+                return ['idUtente'=>$idUtente, 'username'=>$username];
             } else {
                 return AppHelpers::rispostaCustom(null, 'Username già in uso', 400);
             }
@@ -81,9 +81,9 @@ class AccediController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        //
+        
     }
 
     /**
@@ -97,6 +97,30 @@ class AccediController extends Controller
         //
     }
 
+    /**
+     * 
+     */
+    public function modify($idUtente, $vecchiaPssw, $nuovaPssw)
+    {
+        //verifica l'esistenza dell'utente
+        $utente = Utente::where('idUtente', $idUtente)->first();
+        if ($utente == null) {
+            return AppHelpers::rispostaCustom(null, 'Utente non trovato', 403);
+        } else {
+            $vecchiaPssw = hash('sha512', $vecchiaPssw);
+            $password = Password::where('idUtente', $idUtente)->first();
+            //verifica se la vecchia password corrisponde
+            if ($password->pssw == $vecchiaPssw) {
+                $nuovaPssw = hash('sha512', $nuovaPssw);
+                //modifica e salva nuova password
+                $password->pssw = $nuovaPssw;
+                $password->save();
+                return AppHelpers::rispostaCustom(null, 'Password modificata con successo');
+            } else {
+                return AppHelpers::rispostaCustom(null, 'Vecchia password non corrisponde', 400);
+            }
+        }
+    }
 
     // ----------------------------------------------------------------------------------------------------------
     
@@ -255,7 +279,7 @@ class AccediController extends Controller
                 return AppHelpers::rispostaCustom(null, 'Sessione scaduta', 400);
             }
         } else {
-            return AppHelpers::rispostaCustom(null, 'Utente non esiste', 404);
+            return AppHelpers::rispostaCustom(null, 'Tentativo fallito', 403);
         }
     }
 

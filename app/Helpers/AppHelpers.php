@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Config;
 use App\Models\Permesso;
 use App\Models\Stato;
 use App\Models\Utente;
@@ -41,7 +42,7 @@ class AppHelpers {
          */
         public static function creaJWT($idUtente, $secretJWT,$scade=null) {
             $iat = time();
-            $scadenza = ($scade==null) ? 60*60*24*15 : $scade; //15 giorni
+            $scadenza = ($scade==null) ? Config::durataSessione() : $scade;
             $utente = Utente::where('idUtente', $idUtente)->first();
             $idPermesso = $utente->idPermesso;
             $permesso = Permesso::where('idPermesso', $idPermesso)->first()->permesso;
@@ -56,7 +57,7 @@ class AppHelpers {
                 'iss' => 'Codex',
                 'aud' => 'null',
                 'iat' => $iat,
-                'nbf' => $iat + 10,
+                'nbf' => $iat,
                 'exp' => $iat + $scadenza,
                 'data' => [
                     'idUtente' => $idUtente,

@@ -6,11 +6,12 @@ use App\Http\Requests\UtenteStoreRequest;
 use App\Http\Requests\UtenteUpdateRequest;
 use App\Models\Utente;
 use App\Http\Resources\UtenteResource;
-use App\Http\Resources\UtenteCollection;
 use App\Http\Resources\UtenteResourceComplete;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\AppHelpers;
+use App\Http\Resources\UtenteCollection;
+use App\Http\Resources\UtenteCollectionComplete;
 
 class UtenteController extends Controller
 {
@@ -28,10 +29,10 @@ class UtenteController extends Controller
         if (request('idPermesso') != null) {
             $utente = $utente->where('idPermesso', request('idPermesso'));
         }
-        if (request('cerca') != null) {
-            $utente = $utente->where('codFiscale', request('cerca'));
+        if (request('cerca')) {
+            $utente=Utente::where('codFiscale', request('cerca'))->get();
         }
-        return new UtenteCollection($utente);
+        return new UtenteCollectionComplete($utente);
     }
 
     /**
@@ -64,9 +65,9 @@ class UtenteController extends Controller
      */
     public function show(Utente $utente)
     {
-        if (Gate::allows("Amministratore")) {
+        if (Gate::allows("Amministratore") || (Gate::allows("Membro") && Auth::user()->idUtente == $utente->idUtente)) {
             return new UtenteResourceComplete($utente);
-        } elseif (Gate::allows("Membro") && Auth::user()->idUtente == $utente->idUtente) {
+        } elseif (Gate::allows("Ospite") && Auth::user()->idUtente == $utente->idUtente) {
             return new UtenteResource($utente);
         } else {
             return AppHelpers::rispostaCustom(null, 'Utente non abilitato', 403);

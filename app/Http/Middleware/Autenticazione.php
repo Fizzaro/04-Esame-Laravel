@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AccediController;
 use App\Models\Utente;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\AppHelpers;
 
 class Autenticazione
 {
@@ -24,6 +25,7 @@ class Autenticazione
         //codice di controllo per l'autenticazione
         if ($token != null) {
             $payload = AccediController::verificaJWT($token);
+            //print_r($payload);
             $utente = Utente::where('idUtente', $payload->data->idUtente)->first();
             if ($utente != null) {
                 Auth::login($utente);
@@ -33,10 +35,12 @@ class Autenticazione
                 $request["permesso"] = $payload->data->permesso;
                 return $next($request);
             } else {
-                abort(403, 'Autenticazione fallita');
+                return AppHelpers::rispostaCustom(null, 'Autenticazione fallita', 403);
+                // abort(403, 'Autenticazione fallita');
             }
         } else {
-            abort(403, 'Autenticazione inesistente');
+            return AppHelpers::rispostaCustom(null, 'Autenticazione inesistente', 403);
+            // abort(403, 'Autenticazione inesistente');
         }
         
     }

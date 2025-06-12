@@ -19,9 +19,18 @@ class RegistraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $rit = 'Salvataggio fallito';
+        if($request->hasFile('filesDaCaricare')) {
+            foreach ($request->file('filesDaCaricare') as $file) {
+                $name = $file->getClientOriginalName();
+                $file->move(public_path().'/files/', $name);
+            }
+            $rit='Salvataggio avvenuto';
+            return AppHelpers::rispostaCustom([], $rit);
+        }
+        return AppHelpers::rispostaCustom([], $rit, 500);
     }
 
     /**
@@ -85,10 +94,16 @@ class RegistraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(string $fileName)
     {
-        //
+        $filePath = public_path('files\''.$fileName);
+        if (file_exists($filePath)) {
+            $risposta= file($filePath);
+            return AppHelpers::rispostaCustom([$risposta]);
+        }
+        return AppHelpers::rispostaCustom([$filePath], 'File non trovato', 404);
     }
+
 
     /**
      * Update the specified resource in storage.
